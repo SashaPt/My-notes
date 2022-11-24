@@ -5,7 +5,7 @@ import { INote } from '../model/notes.model';
   providedIn: 'root',
 })
 export class NotesService {
-  notes!: INote[];
+  notes: INote[] = [];
   id: number = 0;
   item!: INote;
   constructor() {}
