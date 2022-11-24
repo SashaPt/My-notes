@@ -23,6 +23,7 @@
     </label>
   </div>
   <div class="container">
+    
     <div class="add-note" (click)="toggleForm()" *ngIf="isFormShown">
       <form
         [formGroup]="checkoutForm"
@@ -37,8 +38,8 @@
           [readonly]="isShown"
         />
         <label for="message">Message:</label>
-        <div class="text">
-          <div #backdrop class="backdrop">
+        <div class="text" >
+          <div #backdrop class="backdrop"*ngIf="isUpdated || isShown">
             <div class="highlights" [innerHTML]="highlightWords(note)"></div>
           </div>
           <textarea
