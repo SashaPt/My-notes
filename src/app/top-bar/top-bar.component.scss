@@ -1,0 +1,22 @@
+.container {
+  height: 80px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: black;
+  color: white;
+  h1 {
+    text-shadow: 0 0 5px white;
+  }
+}
+@media (max-width: 480px) {
+  .container {
+    height: 150px;
+    align-items: flex-start;
+  }
+  h1 {
+    padding-top: calc((50px - 2rem) / 2);
+  }
+}
+

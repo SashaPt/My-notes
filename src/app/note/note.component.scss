@@ -1,0 +1,36 @@
+$disst: 0.5rem, 1rem;
+.container {
+  width: 100%;
+  padding: nth($disst, 2);
+  margin: nth($disst, 1) 0;
+  border: 2px solid white;
+  border-radius: 6px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.note {
+  display: grid;
+  row-gap: nth($disst, 1);
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    span {
+      margin-right: nth($disst, 1);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: nth($disst, 1);
+  }
+  .tools {
+    button.round {
+      width: 30px;
+      height: 30px;
+      padding: nth($disst, 1);
+    }
+  }
+}

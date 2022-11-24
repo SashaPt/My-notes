@@ -1,0 +1,123 @@
+$light-color: white;
+$disst: 0.5rem, 1rem, 2rem;
+@mixin flex {
+  display: flex;
+  align-items: center;
+}
+.wrapper {
+  padding-top: 80px;
+  height: 100%;
+}
+.container {
+  padding: nth($disst, 2);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+app-top-bar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+.search-panel {
+  @include flex;
+  height: 50px;
+  position: absolute;
+  top: 15px;
+  right: calc(nth($disst, 3) + 50px);
+  border: 2px solid $light-color;
+  border-radius: 6px;
+  padding-right: nth($disst, 1);
+  input {
+    width: 100%;
+    color: $light-color;
+    border: none;
+  }
+}
+app-note {
+  cursor: pointer;
+}
+.add-note {
+  @include flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+form {
+  width: 90%;
+  max-width: 400px;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  margin: auto;
+  padding: nth($disst, 2);
+  border-radius: 10px;
+  background-color: $light-color;
+  display: flex;
+  flex-direction: column;
+  row-gap: nth($disst, 1);
+  .text,
+  .backdrop,
+  textarea {
+    width: 100%;
+    height: 180px;
+    scrollbar-width: thin;
+  }
+  .highlights,
+  textarea {
+    padding: nth($disst, 1);
+    font-family: monospace;
+  }
+  .text {
+    transform: translateZ(0);
+    -webkit-text-size-adjust: none;
+  }
+  .backdrop {
+    position: absolute;
+    z-index: 1;
+    border: 2px solid transparent;
+    overflow: auto;
+    pointer-events: none;
+    transition: transform 1s;
+  }
+  .highlights {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: transparent;
+  }
+  textarea {
+    position: absolute;
+    z-index: 2;
+    overflow: auto;
+  }
+  ul {
+    @include flex;
+    height: auto;
+    flex-wrap: wrap;
+    row-gap: nth($disst, 1);
+    list-style-type: none;
+  }
+  li {
+    max-width: 100%;
+    height: auto;
+    padding: 0.3rem 0.5rem;
+    border: 2px inset lightgray;
+    border-radius: 6px;
+    margin-right: nth($disst, 1);
+    position: relative;
+    overflow-wrap: break-word;
+  }
+}
+@media (max-width: 480px) {
+  .wrapper {
+    padding-top: 150px;
+  }
+  .search-panel {
+    width: calc(100% - nth($disst, 2) * 2);
+    top: 80px;
+    right: nth($disst, 2);
+  }
+}

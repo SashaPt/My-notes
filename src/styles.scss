@@ -1,1 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+$dark-color: black;
+$light-color: white;
+$disst: 0.5rem, 1rem, 2rem, 1.5rem, 1.2rem;
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  line-height: 1;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-size: calc(14px + 2 * (100vw / 1200));
+  background: linear-gradient(rgba($color: $dark-color, $alpha: 0.2), rgba($color: $dark-color, $alpha: 0.2)),
+    no-repeat
+      url("https://images.unsplash.com/photo-1523633589114-88eaf4b4f1a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
+  background-size: cover;
+  background-position: center center;
+}
+h1 {
+  font-size: nth($disst, 3);
+}
+h2 {
+  font-size: nth($disst, 4);
+}
+p,
+input,
+textarea {
+  font-size: nth($disst, 2);
+}
+label {
+  font-size: nth($disst, 5);
+}
+input,
+textarea {
+  border-radius: 6px;
+  outline: none;
+  padding: nth($disst, 1);
+  background-color: transparent;
+}
+textarea {
+  resize: none;
+  scrollbar-width: thin;
+}
+button {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $dark-color;
+  color: $light-color;
+  font-size: nth($disst, 2);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 5px $dark-color;
+  }
+}
+button.round {
+  width: 50px;
+  height: 50px;
+  padding: nth($disst, 2);
+  background: transparent;
+  border: 2px solid $light-color;
+  border-radius: 50%;
+  &:hover {
+    box-shadow: 0 0 5px $light-color;
+  }
+}
+button.little {
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  position: absolute;
+  right: -0.5rem;
+  top: -0.5rem;
+}
+svg {
+  fill: $light-color;
+}
+.tools {
+  display: flex;
+  column-gap: nth($disst, 1);
+}
+i, b {
+  border-radius: 3px;
+  color: transparent;
+  background-color: lightgray;
+}
+
+
