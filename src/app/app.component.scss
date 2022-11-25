@@ -56,8 +56,7 @@ form {
   padding: nth($disst, 2);
   border-radius: 10px;
   background-color: $light-color;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   row-gap: nth($disst, 1);
   .text,
   .backdrop,

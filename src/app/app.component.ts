@@ -134,7 +134,7 @@ export class AppComponent implements OnInit {
     event.preventDefault();
     if (this.checkoutForm.value.message) {
       let text = this.checkoutForm.value.message;
-      text = text.replace(new RegExp(`${tag}\\b`, 'gi'), tag.slice(1, tag.length));
+      text = text.replace(new RegExp(text.match(`${tag}\\b`) ? `${tag}\\b` : `${tag}`, 'gi'), tag.slice(1, tag.length));
       this.checkoutForm.controls['message'].setValue(text);
     }
   }
@@ -144,7 +144,7 @@ export class AppComponent implements OnInit {
       let text = this.checkoutForm.value.message;
       item.tags.sort().reverse().forEach((tag) => {
         tag = tag.slice(1, tag.length);
-        text = text.replace(new RegExp(`\\b${tag}\\b`, 'gi'), `<i>${tag}</i>`);
+        text = text.replace(new RegExp(text.match(`\\b${tag}\\b`) ? `${tag}\\b` : `${tag}`, 'gi'), `<i>${tag}</i>`);
       });
       return text;
     } else return '';
