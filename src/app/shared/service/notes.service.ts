@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { delay, Observable, of } from 'rxjs';
 import { INote } from '../model/notes.model';
 
 @Injectable({
@@ -49,5 +50,16 @@ export class NotesService {
   updateItem(id: number, item: INote) {
     this.notes = this.notes.map((note) => (note.id == id ? item : note));
     localStorage.setItem('notes', JSON.stringify(this.notes));
+  }
+  searchItems(query?: string): Observable<INote[]> {
+    if (query === undefined || query.length === 0) {
+      return of(this.notes);
+    }
+    const result = this.notes.filter((note) =>
+      note.tags.find((tag) =>
+        query ? tag.toLowerCase().includes(query.toLowerCase()) : tag
+      )
+    );
+    return of(result);
   }
 }

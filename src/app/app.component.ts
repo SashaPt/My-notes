@@ -1,5 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { INote } from './shared/model/notes.model';
 import { NotesService } from './shared/service/notes.service';
 
@@ -14,7 +21,6 @@ export class AppComponent implements OnInit {
   @ViewChild('backdrop')
   backdrop!: ElementRef<HTMLDivElement>;
   notes: INote[] = [];
-  filteredNotes: INote[] = [];
   note!: INote;
   tags: string[] = [];
 
@@ -22,7 +28,9 @@ export class AppComponent implements OnInit {
     title: '',
     message: '',
   });
-  search = new FormControl<string>('');
+  searchSubject = new Subject<string | undefined>();
+  searchSubscription?: Subscription;
+  searchValue: string = '';
 
   isFormShown: boolean = false;
   isAdded: boolean = false;
@@ -36,6 +44,15 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNotes();
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap((searchQuery) => this.notesService.searchItems(searchQuery))
+      )
+      .subscribe((data) => {
+        this.notes = data;
+      });
   }
   createNewNote() {
     this.isAdded = true;
@@ -47,7 +64,6 @@ export class AppComponent implements OnInit {
   }
   toggleForm() {
     this.isFormShown = !this.isFormShown;
-    this.getNotes();
   }
   onSubmit(): void {
     if (this.isAdded) {
@@ -73,6 +89,9 @@ export class AppComponent implements OnInit {
         updated.id = this.note.id;
         this.notesService.updateItem(this.note.id, updated);
         this.getNotes();
+        this.notesService
+          .searchItems(this.searchValue)
+          .subscribe((data) => (this.notes = data));
         this.toggleForm();
       }
     }
@@ -101,6 +120,12 @@ export class AppComponent implements OnInit {
     this.note = item;
   }
 
+  onSearch(event: Event) {
+    const searchQuery = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(searchQuery?.trim());
+    this.searchValue = searchQuery;
+  }
+
   createTag(text: string) {
     this.tags = [];
     let words = text.split(/ |\n|\,|\.|\:|\;|\!|\?/);
@@ -116,25 +141,14 @@ export class AppComponent implements OnInit {
     return this.tags;
   }
 
-  filterNotes() {
-    if (this.search.value) {
-      return this.notes.filter((note) =>
-        note.tags.find((tag) =>
-          this.search.value
-            ? tag.toLowerCase().includes(this.search.value.toLowerCase())
-            : tag
-        )
-      );
-    } else {
-      return this.notes;
-    }
-  }
-
   deleteTag(tag: string, event: Event) {
     event.preventDefault();
     if (this.checkoutForm.value.message) {
       let text = this.checkoutForm.value.message;
-      text = text.replace(new RegExp(text.match(`${tag}\\b`) ? `${tag}\\b` : `${tag}`, 'gi'), tag.slice(1, tag.length));
+      text = text.replace(
+        new RegExp(text.match(`${tag}\\b`) ? `${tag}\\b` : `${tag}`, 'gi'),
+        tag.slice(1, tag.length)
+      );
       this.checkoutForm.controls['message'].setValue(text);
     }
   }
@@ -142,10 +156,20 @@ export class AppComponent implements OnInit {
   highlightWords(item: INote) {
     if (this.checkoutForm.value.message) {
       let text = this.checkoutForm.value.message;
-      item.tags.sort().reverse().forEach((tag) => {
-        tag = tag.slice(1, tag.length);
-        text = text.replace(new RegExp(text.match(`\\b${tag}\\b`) ? `${tag}\\b` : `${tag}`, 'gi'), `<i>${tag}</i>`);
-      });
+      const itemTags = item.tags.slice();
+      itemTags
+        .sort()
+        .reverse()
+        .forEach((tag) => {
+          tag = tag.slice(1, tag.length);
+          text = text.replace(
+            new RegExp(
+              text.match(`\\b${tag}\\b`) ? `\\b${tag}\\b` : `${tag}`,
+              'gi'
+            ),
+            `<i>${tag}</i>`
+          );
+        });
       return text;
     } else return '';
   }

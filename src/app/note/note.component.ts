@@ -22,7 +22,8 @@ export class NoteComponent implements OnInit {
   deleteNote(id: number) {
     this.delete.emit(id);
   }
-  rewriteNote(id: number) {
+  rewriteNote(id: number, event: Event) {
+    event?.stopPropagation()
     this.showForm.emit(id);
   }
 }

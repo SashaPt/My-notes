@@ -6,8 +6,7 @@
       type="text"
       placeholder="tag name"
       id="search"
-      [formControl]="search"
-      (change)="filterNotes()"
+      (input)="onSearch($event)"
     />
     <label for="search">
       <svg
@@ -66,7 +65,7 @@
     </div>
 
     <app-note
-      *ngFor="let note of filterNotes(); index as ind"
+      *ngFor="let note of notes; index as ind"
       [note]="note"
       [ind]="ind"
       [tags]="tags"
